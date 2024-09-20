@@ -172,7 +172,10 @@ pcl::PointCloud<pcl::PointXYZ> clicked_cloud_;
 
 void FixedArrayMapGenerate() {
   pcl::PointXYZ pt_fixed;
-
+// 初始化随机数生成器，使用固定种子确保每次生成的随机数相同
+    std::mt19937 rng(50); // 固定种子值，可以根据需要调整
+    std::uniform_real_distribution<double> dist_x(_x_l, _x_l + _x_size);
+    std::uniform_real_distribution<double> dist_y(_y_l, _y_l + _y_size);
   // 极坐标障碍物网格的参数
   int grid_size_x = 13;
   int grid_size_y = 7;
@@ -226,8 +229,10 @@ void FixedArrayMapGenerate() {
   for (int i = 0; i < circle_grid_size; i++) {
     for (int j = 0; j < circle_grid_size; j++) {
       // 计算圆形障碍物的位置
-      double x = _x_l + (i + 1) * circle_spacing_x - 1;
-      double y = _y_l + (j + 1) * circle_spacing_y + 0.5;
+      // double x = _x_l + (i + 1) * circle_spacing_x - 1;
+      // double y = _y_l + (j + 1) * circle_spacing_y + 0.5;
+      double x = dist_x(rng);
+      double y = dist_y(rng);
       double z = (z_l_ + z_h_) / 2;  // 平均z坐标
 
       // 跳过距离初始位置或(19,0)太近的位置
